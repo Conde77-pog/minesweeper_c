@@ -39,6 +39,7 @@ void PlaceBombs(struct Cell Board[board_width][board_height], int number_of_bomb
         if (!Board[x][y].bomb)
         {
             Board[x][y].bomb = true;
+            Board[x][y].number_of_bombs = 10;
             number_of_bombs--;
         }
     }
@@ -58,6 +59,25 @@ void PrintBoard(struct Cell Board[board_width][board_height])
     }
 }
 
+void RevealCell(struct Cell Board[board_width][board_height],int x,int y)
+{
+    if(Board[x][y].hidden == true)
+    {
+        if(Board[x][y].number_of_bombs == 0)
+        {
+            Board[x][y].hidden = false;
+            RevealCell(Board,x + 1, y + 1);
+            RevealCell(Board,x + 1, y);
+            RevealCell(Board,x + 1, y - 1);
+            RevealCell(Board,x, y - 1);
+            RevealCell(Board,x - 1, y - 1);
+            RevealCell(Board,x - 1, y);
+            RevealCell(Board,x -1, y + 1);
+            RevealCell(Board,x, y + 1);
+        }
+    }
+}
+
 void Play(struct Cell Board[board_width][board_height], int x, int y)
 {
     if (Board[x][y].bomb)
@@ -73,7 +93,9 @@ void Play(struct Cell Board[board_width][board_height], int x, int y)
         PrintBoard(Board);
         exit(0);
     }
-    else{Board[x][y].hidden = false;}
+    else{
+        RevealCell(Board,x,y);
+    }
 }
 
 int main()
