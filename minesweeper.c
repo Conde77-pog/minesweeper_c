@@ -110,5 +110,6 @@ int main()
         Play(Board, x, y);
         PrintBoard(Board);
     }
+
     return 0;
 }
