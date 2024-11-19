@@ -117,7 +117,7 @@ void RevealCell(struct Cell Board[board_width][board_height], int x, int y)
     if (Board[x][y].number_of_bombs == 0) {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) continue;
+                if (dx == 0 && dy == 0){ continue;}
 
                 RevealCell(Board, x + dx, y + dy);
             }
@@ -153,12 +153,14 @@ int main(int argc, char *argv[])
     if(argc != 4)
     {
         printf("./mine <x> <y> <number of bombs>");
+        return 0;
     }
-
 
     board_width =atoi(argv[1]);
     board_height = atoi(argv[2]);
     number_of_bombs = atoi(argv[3]);
+
+    if(number_of_bombs >= board_height * board_width){return 0;}
 
     struct Cell Board[board_width][board_height];
     InitializeBoard(Board);
@@ -175,10 +177,9 @@ int main(int argc, char *argv[])
             printf("Posição inválida. Tente novamente.\n");
             continue;
         }
-
+        
         Play(Board, x, y);
         PrintBoard(Board);
     }
-
     return 0;
 }
