@@ -26,6 +26,7 @@ void InitializeBoard(struct Cell Board[board_width][board_height])
         for (int j = 0; j < board_height; j++)
         {
             Board[i][j].hidden = true;
+            Board[i][j].bomb = false;
             Board[i][j].number_of_bombs = 0;
         }
     }
@@ -36,13 +37,16 @@ void PlaceBombs(struct Cell Board[board_width][board_height], int number_of_bomb
 
     int placed_bombs = 0;
 
+    printf("bombs-%d\n",number_of_bombs);
 
-    while (placed_bombs < number_of_bombs) {
+    while (placed_bombs != number_of_bombs) {
 
         int x = rand() % board_width;
         int y = rand() % board_height;
 
         if (!Board[x][y].bomb) {
+
+            printf("placed %d\n",placed_bombs);
             Board[x][y].bomb = true; 
             placed_bombs++;
         }
@@ -157,7 +161,6 @@ int main(int argc, char *argv[])
     number_of_bombs = atoi(argv[3]);
 
     struct Cell Board[board_width][board_height];
-
     InitializeBoard(Board);
     PlaceBombs(Board, number_of_bombs);
     Check_for_Bomb(Board);
