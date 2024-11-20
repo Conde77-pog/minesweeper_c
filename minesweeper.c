@@ -7,6 +7,7 @@
 int board_width;
 int board_height;
 int number_of_bombs;
+int number_of_shown;
 
 #define ANSI_COLOR_RED      "\x1b[31m"
 #define ANSI_COLOR_GRAY     "\e[0;37m"
@@ -54,7 +55,7 @@ void PlaceBombs(struct Cell Board[board_width][board_height], int number_of_bomb
 }
 
 
-void Check_for_Bomb(struct Cell Board[board_width][board_height]) {
+void CheckBomb(struct Cell Board[board_width][board_height]) {
     for (int i = 0; i < board_width; i++) {
         for (int j = 0; j < board_height; j++) {
             Board[i][j].number_of_bombs = 0;
@@ -113,6 +114,7 @@ void RevealCell(struct Cell Board[board_width][board_height], int x, int y)
     }
 
     Board[x][y].hidden = false;
+    number_of_shown++;
 
     if (Board[x][y].number_of_bombs == 0) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -134,7 +136,7 @@ void Play(struct Cell Board[board_width][board_height], int x, int y)
         {
             for(int j = 0; j < board_height; j++)
             {
-                if(Board[i][j].bomb == true) {Board[i][j].hidden = false;}
+                if(Board[i][j].bomb == true) {Board[i][j].hidden = false;number_of_shown++;}
             }
         }
         PrintBoard(Board);
@@ -160,12 +162,15 @@ int main(int argc, char *argv[])
     board_height = atoi(argv[2]);
     number_of_bombs = atoi(argv[3]);
 
+    number_of_shown = 0;
+    int number_of_cell_not_bombs = (board_width * board_height) - number_of_bombs;
+
     if(number_of_bombs >= board_height * board_width){return 0;}
 
     struct Cell Board[board_width][board_height];
     InitializeBoard(Board);
     PlaceBombs(Board, number_of_bombs);
-    Check_for_Bomb(Board);
+    CheckBomb(Board);
     PrintBoard(Board);
 
     while (true)
@@ -180,6 +185,10 @@ int main(int argc, char *argv[])
         
         Play(Board, x, y);
         PrintBoard(Board);
+
+        if(number_of_shown == number_of_cell_not_bombs){break;}
     }
+
+    printf("you wonnnnnnnnnnn\n");
     return 0;
 }
